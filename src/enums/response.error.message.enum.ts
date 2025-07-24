@@ -1,0 +1,25 @@
+export enum ErrorMessage {
+  UNAUTHORIZED = 'Unauthorized',
+  NOT_FOUND = 'Not found',
+  METHOD_NOT_ALLOWED = 'Method not allowed',
+  ROUTE_NOT_ALLOWED = 'Route not allowed',
+  USER_NOT_ALLOWED = 'User not allowed',
+  INVALID_TOKEN = 'Invalid or missing token',
+  EXTERNAL_API_NAME_NOT_FOUND = 'External Api Name not found',
+  MISSING_REQUIRED_HEADER = 'Missing required header',
+  MICROSERVICE_NOT_FOUND = 'Microservice not found',
+}
+
+export enum ErrorCode {
+  UNAUTHORIZED = 'UNAUTHORIZED',
+  BAD_GATEWAY = 'BAD_GATEWAY',
+  FORBIDDEN = 'FORBIDDEN',
+  BAD_REQUEST = 'BAD_REQUEST',
+  NOT_FOUND = 'NOT_FOUND',
+  METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED',
+  ROUTE_NOT_ALLOWED = 'ROUTE_NOT_ALLOWED',
+  USER_NOT_ALLOWED = 'USER_NOT_ALLOWED',
+  INVALID_TOKEN = 'INVALID_TOKEN',
+  EXTERNAL_API_NAME_NOT_FOUND = 'EXTERNAL_API_NAME_NOT_FOUND',
+  MISSING_REQUIRED_HEADER = 'MISSING_REQUIRED_HEADER',
+}
