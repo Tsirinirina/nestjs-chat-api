@@ -32,7 +32,6 @@ export class DirectConversationGateway
 
   handleConnection(client: Socket) {
     const userId = client.handshake.query.userId;
-    console.log('userid =', userId);
 
     if (userId) {
       client.join(userId);
@@ -46,6 +45,7 @@ export class DirectConversationGateway
   async notifyNewDC(conversationId: string) {
     const newDc =
       await this.dcService.getDirectConversationsById(conversationId);
+
     this.server
       .to(newDc?.receiver._id.toString() as string)
       .emit('newDC', newDc);

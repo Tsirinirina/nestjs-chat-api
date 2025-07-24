@@ -42,10 +42,13 @@ export class DirectConversationMongoDbAdapter
     return this.dcModel.find({ conversation: conversationId });
   }
 
-  getDirectConversationsById(id: string): Promise<DirectConversation | null> {
-    return this.dcModel
+  async getDirectConversationsById(
+    id: string,
+  ): Promise<DirectConversation | null> {
+    const res = await this.dcModel
       .findById(id)
       .populate(['sender', 'receiver', 'conversation']);
+    return res;
   }
 
   getDirectConversationsBySenderId(
