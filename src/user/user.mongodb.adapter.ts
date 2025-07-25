@@ -17,7 +17,14 @@ export class UserMongoDbAdapter implements UserRepository {
   }
 
   getAllUser(): Promise<User[]> {
-    return this.userModel.find({});
+    return this.userModel.find(
+      {},
+      {
+        username: 1,
+        email: 1,
+        isActive: 1,
+      },
+    );
   }
 
   getUserById(id: string): Promise<User | null> {
