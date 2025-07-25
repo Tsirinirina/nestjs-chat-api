@@ -10,12 +10,15 @@ import {
 import { DirectConversationService } from './direct-conversation.service';
 import { CreateDCDto } from './dto/create-dc.dto';
 import { DirectConversation } from './entity/direct-conversation.entity';
+import { RequirePermissions } from 'src/core/decorators/permission.decorator';
+import { PermissionName } from 'src/enums/permissions.enum';
 
 @Controller('direct-conversation')
 export class DirectConversationController {
   constructor(private readonly dcService: DirectConversationService) {}
 
   @Post()
+  @RequirePermissions([PermissionName.CREATE_DIRECT_CONVERSATION])
   createDirectConversation(
     @Body() createDCDto: CreateDCDto,
   ): Promise<DirectConversation> {
@@ -23,6 +26,7 @@ export class DirectConversationController {
   }
 
   @Get('both')
+  @RequirePermissions([PermissionName.VIEW_DIRECT_CONVERSATION])
   getDirectConversationsByBothId(
     @Query('sender') senderId: string,
     @Query('receiver') receiverId: string,
@@ -31,6 +35,7 @@ export class DirectConversationController {
   }
 
   @Get(':id')
+  @RequirePermissions([PermissionName.VIEW_DIRECT_CONVERSATION])
   getDirectConversationsById(
     @Param('id') id: string,
   ): Promise<DirectConversation | null> {
@@ -38,6 +43,7 @@ export class DirectConversationController {
   }
 
   @Get('conversation/:id')
+  @RequirePermissions([PermissionName.VIEW_DIRECT_CONVERSATION])
   getDirectConversationsByConversationId(
     @Param('id') conversationId: string,
   ): Promise<DirectConversation[] | []> {
@@ -47,6 +53,7 @@ export class DirectConversationController {
   }
 
   @Get('sender/:id')
+  @RequirePermissions([PermissionName.VIEW_DIRECT_CONVERSATION])
   getDirectConversationsBySenderId(
     @Param('id') senderId: string,
   ): Promise<DirectConversation[] | []> {
@@ -54,6 +61,7 @@ export class DirectConversationController {
   }
 
   @Get('receiver/:id')
+  @RequirePermissions([PermissionName.VIEW_DIRECT_CONVERSATION])
   getDirectConversationsByReceiverId(
     @Param('id') receiverId: string,
   ): Promise<DirectConversation[] | []> {
@@ -61,6 +69,7 @@ export class DirectConversationController {
   }
 
   @Delete(':id')
+  @RequirePermissions([PermissionName.DELETE_DIRECT_CONVERSATION])
   deleteDirectConversation(
     @Param('id') id: string,
   ): Promise<DirectConversation | null> {

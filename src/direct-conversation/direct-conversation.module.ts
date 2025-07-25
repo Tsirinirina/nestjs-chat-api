@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DirectConversationService } from './direct-conversation.service';
 import { DirectConversationController } from './direct-conversation.controller';
 import { DirectConversationGateway } from './direct-conversation.gateway';
@@ -15,6 +15,8 @@ import {
   Conversation,
   conversationSchema,
 } from 'src/conversation/entity/conversation.entity';
+import { AuthModule } from 'src/auth/auth.module';
+import { RoleModule } from 'src/role/role.module';
 
 @Module({
   imports: [
@@ -22,11 +24,14 @@ import {
       { name: DirectConversation.name, schema: directConversationSchema },
       { name: Conversation.name, schema: conversationSchema },
     ]),
+    RoleModule,
+    forwardRef(() => AuthModule),
   ],
   controllers: [DirectConversationController],
   providers: [
     DirectConversationService,
     DirectConversationGateway,
+
     {
       provide: DIRECT_CONVERSATION_REPOSITORY,
       useClass: DirectConversationMongoDbAdapter,

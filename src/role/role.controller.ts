@@ -24,25 +24,25 @@ export class RoleController {
   }
 
   @Get()
-  // @RequirePermissions([PermissionName.VIEW_ROLE])
+  @RequirePermissions([PermissionName.VIEW_ROLE])
   findAll() {
     return this.roleService.findAll();
   }
 
   @Get(':id')
-  // @RequirePermissions([PermissionName.VIEW_ROLE])
+  @RequirePermissions([PermissionName.VIEW_ROLE])
   findOne(@Param('id') id: string) {
     return this.roleService.findOne(id);
   }
 
   @Patch(':id')
-  // @RequirePermissions([PermissionName.EDIT_ROLE])
+  @RequirePermissions([PermissionName.EDIT_ROLE])
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return this.roleService.update(id, updateRoleDto);
   }
 
   @Delete(':id')
-  // @RequirePermissions([PermissionName.DELETE_ROLE])
+  @RequirePermissions([PermissionName.DELETE_ROLE])
   remove(@Param('id') id: string) {
     return this.roleService.remove(id);
   }

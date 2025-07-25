@@ -3,14 +3,14 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { PERMISSION_GUARD_KEY } from '../decorators/permission.decorator';
 import { RoleService } from '../../role/role.service';
-import { UserService } from '../../user/user.service';
 import { ErrorCode, ErrorMessage } from 'src/enums/response.error.message.enum';
 import { BusinessException } from '../exceptions/business.exception';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class PermissionGuard extends AuthGuard('jwt') implements CanActivate {
   constructor(
-    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
     private readonly roleService: RoleService,
   ) {
@@ -42,7 +42,8 @@ export class PermissionGuard extends AuthGuard('jwt') implements CanActivate {
 
     const token = bearerToken.replace('Bearer ', '');
 
-    const user = await this.userService.verifyToken(token);
+    const user = await this.jwtService.verifyAsync(token);
+
     if (!user || !user.roles) {
       throw new BusinessException(
         ErrorCode.FORBIDDEN,

@@ -32,21 +32,25 @@ export class UserController {
   }
 
   @Get(':id')
+  @RequirePermissions([PermissionName.VIEW_USER])
   findOne(@Param('id') id: string) {
     return this.userService.findUserById(id);
   }
 
   @Patch(':id')
+  @RequirePermissions([PermissionName.EDIT_USER])
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @RequirePermissions([PermissionName.DELETE_USER])
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
 
   @Post('request-password-reset')
+  @RequirePermissions([PermissionName.CREATE_USER])
   requestPasswordReset(
     @Body() requestPasswordResetDto: RequestPasswordResetDto,
   ) {
@@ -54,6 +58,7 @@ export class UserController {
   }
 
   @Post('reset-password')
+  @RequirePermissions([PermissionName.CREATE_USER])
   resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.userService.resetPassword(
       resetPasswordDto.password,

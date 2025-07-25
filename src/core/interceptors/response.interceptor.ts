@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable max-lines-per-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   CallHandler,
@@ -26,18 +26,44 @@ export class ResponseInterceptor implements NestInterceptor {
         const status = err.status || 500;
 
         let code = 'UNKNOWN_ERROR';
-        let details = 'Une erreur est survenue';
+        let details: string | string[] = 'Une erreur est survenue';
         let message = 'Une erreur est survenue';
+
         if (err.code) {
           code = err.code;
         }
         if (err.message) {
           message = err.message;
         }
-        if (err.response) {
-          if (err.response.errorDetails) {
-            details = err.response.errorDetails;
+
+        // Détails personnalisés
+        if (err.response?.errorDetails) {
+          if (
+            typeof err.response.errorDetails === 'string' &&
+            err.response.errorDetails.includes('\n')
+          ) {
+            details = err.response.errorDetails
+              .split('\n')
+              .map((line) => line.trim())
+              .filter((line) => line.startsWith('-'))
+              .map((line) => line.replace(/^-\s*/, ''));
           }
+        } else if (
+          typeof err.message === 'string' &&
+          err.message.includes('\n')
+        ) {
+          // Si le message contient plusieurs lignes d'erreurs
+          details = err.message
+            .split('\n')
+            .map((line) => line.trim())
+            .filter((line) => line.startsWith('-'))
+            .map((line) => line.replace(/^-\s*/, ''));
+        }
+
+        // Traitement du stack
+        let stack: string[] | string = err.stack || null;
+        if (typeof stack === 'string' && stack.includes('\n')) {
+          stack = stack.split('\n').map((s) => s.trim());
         }
 
         const errorResponse = {
@@ -49,13 +75,16 @@ export class ResponseInterceptor implements NestInterceptor {
             code,
             message,
             details,
-            stack: err.stack,
+            stack,
           },
         };
 
         response.status(status).json(errorResponse);
 
-        return throwError(() => errorResponse.error.message);
+        return throwError(
+          () =>
+            `\n${errorResponse.error.message}\n${errorResponse.error.details}`,
+        );
       }),
     );
   }
