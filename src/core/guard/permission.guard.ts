@@ -41,9 +41,7 @@ export class PermissionGuard extends AuthGuard('jwt') implements CanActivate {
     }
 
     const token = bearerToken.replace('Bearer ', '');
-
     const user = await this.jwtService.verifyAsync(token);
-
     if (!user || !user.roles) {
       throw new BusinessException(
         ErrorCode.FORBIDDEN,

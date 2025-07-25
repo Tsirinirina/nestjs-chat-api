@@ -5,20 +5,29 @@ import { UserModule } from 'src/user/user.module';
 import { RoleModule } from 'src/role/role.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtConfiguration } from 'src/config/jwt.configuration';
 import { LocalStrategy } from './local.strategy';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CONFIGURATION_TOKEN_DI } from 'src/config/configuration.interface';
 import { config } from 'src/config/config.constant';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
     RoleModule,
     PassportModule,
-    JwtModule.register(JwtConfiguration),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET_KEY', 'default_secret'),
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRATION', '1440m'),
+        },
+      }),
+    }),
   ],
   controllers: [AuthController],
   providers: [
@@ -32,6 +41,6 @@ import { config } from 'src/config/config.constant';
       useValue: config(),
     },
   ],
-  exports: [AuthService, AuthModule],
+  exports: [AuthService, AuthModule, JwtModule],
 })
 export class AuthModule {}
